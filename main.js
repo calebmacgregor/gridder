@@ -12,6 +12,12 @@ const submit = document.querySelector(".submit")
 submit.addEventListener("click", (e) => {
 	if (submit.classList.contains("hidden")) return
 
+	const submitStyler = document.querySelector(".submit-styler")
+	submitStyler.classList.toggle("loading")
+
+	const submitStylerText = document.querySelector(".submit-styler-text")
+	submitStylerText.innerText = "Loading..."
+
 	e.preventDefault()
 	const item = localStorage.getItem("GRID-image")
 
@@ -38,6 +44,5 @@ submit.addEventListener("click", (e) => {
 		combineCanvases(image, x, y)
 	})
 
-	switchButtons()
 	localStorage.removeItem("GRID-image")
 })

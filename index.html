@@ -21,12 +21,12 @@
 					<p class="input-styler-text">Choose an image</p>
 					<input
 						type="file"
-						accept="image/*"
+						accept=".heic"
 						id="choose-file"
 						name="choose-file"
 					/>
 				</div>
-				<div class="submit-styler submit hidden">
+				<div class="submit-styler submit hidden loading">
 					<p class="submit-styler-text">Submit</p>
 				</div>
 				<div class="refresh-styler hidden">
@@ -34,6 +34,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="loading"></div> -->
+
+		<div class="toast hidden">That file type is not supported</div>
 	</body>
 </html>

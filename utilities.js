@@ -136,6 +136,8 @@ export function combineCanvases(image, x, y) {
 	const containerGrid = document.querySelector(".container-grid")
 	containerGrid.style.display = "none"
 
+	switchButtons()
+
 	deleteGrid()
 }
 
@@ -143,8 +145,12 @@ export function switchButtons() {
 	const inputStyler = document.querySelector(".input-styler")
 	const submitStyler = document.querySelector(".submit-styler")
 
+	const submitStylerText = document.querySelector(".submit-styler-text")
+	submitStylerText.innerText = "Submit"
+
 	inputStyler.classList.toggle("hidden")
 	submitStyler.classList.toggle("hidden")
+	submitStyler.classList.toggle("loading")
 }
 
 export function storeImage(e) {
@@ -153,6 +159,14 @@ export function storeImage(e) {
 
 	let base64
 	const files = chooseFile.files[0]
+
+	if (files.type == "image/heic") {
+		// deleteGrid()
+		// switchButtons()
+		chooseFile.value = ""
+		showToast()
+		return
+	}
 	const fileReader = new FileReader()
 
 	fileReader.readAsDataURL(files)
@@ -161,7 +175,6 @@ export function storeImage(e) {
 		const previewImage = document.querySelector(".preview-image")
 		previewImage.innerHTML = `<img src=${e.target.result} alt="" />`
 		base64 = e.target.result
-		console.log(base64)
 
 		localStorage.setItem(
 			"GRID-image",
@@ -183,4 +196,12 @@ export function deleteGrid() {
 	const mainGrid = document.querySelector(".container-grid")
 
 	mainGrid.style = ""
+}
+
+function showToast() {
+	const toast = document.querySelector(".toast")
+	toast.classList.toggle("hidden")
+	setTimeout(() => {
+		toast.classList.toggle("hidden")
+	}, 1500)
 }
