@@ -10,18 +10,22 @@
 	</head>
 	<body>
 		<div class="container" id="container">
-			<h1 class="title">Pick an image to pixelize</h1>
+			<div class="title-container">
+				<h1 class="title">Pick an image to pixelize</h1>
+				<p class="subtitle">(Needs to be less than 2mb)</p>
+			</div>
 			<div class="output-container">
 				<div class="container-grid"></div>
 				<div class="preview-image"></div>
 				<canvas class="output-canvas hidden"></canvas>
 			</div>
+			<!-- Input and submission -->
 			<div class="buttons">
 				<div class="input-styler">
 					<p class="input-styler-text">Choose an image</p>
 					<input
 						type="file"
-						accept=".heic"
+						accept="image/*"
 						id="choose-file"
 						name="choose-file"
 					/>
@@ -35,6 +39,6 @@
 			</div>
 		</div>
 
-		<div class="toast hidden">That file type is not supported</div>
+		<div class="toast hidden shadow"></div>
 	</body>
 </html>

@@ -159,12 +159,17 @@ export function storeImage(e) {
 
 	let base64
 	const files = chooseFile.files[0]
+	console.log(files)
 
 	if (files.type == "image/heic") {
-		// deleteGrid()
-		// switchButtons()
 		chooseFile.value = ""
-		showToast()
+		showToast("This file type is not supported", 2000, "#64ffda")
+		return
+	}
+
+	if (files.size > 2000000) {
+		chooseFile.value = ""
+		showToast("This file is too big :(", 2000, "#64ffda")
 		return
 	}
 	const fileReader = new FileReader()
@@ -176,12 +181,14 @@ export function storeImage(e) {
 		previewImage.innerHTML = `<img src=${e.target.result} alt="" />`
 		base64 = e.target.result
 
+		console.log("attempting to store")
 		localStorage.setItem(
 			"GRID-image",
 			JSON.stringify({
 				image: e.target.result
 			})
 		)
+		console.log("stored successfully")
 	})
 	switchButtons()
 	return base64
@@ -192,16 +199,16 @@ export function deleteGrid() {
 	canvasArray.forEach((canvas) => {
 		canvas.remove()
 	})
-
 	const mainGrid = document.querySelector(".container-grid")
-
 	mainGrid.style = ""
 }
 
-function showToast() {
+function showToast(message, delay, colour = "#64ffda") {
 	const toast = document.querySelector(".toast")
+	toast.innerText = message
+	toast.style.backgroundColor = colour
 	toast.classList.toggle("hidden")
 	setTimeout(() => {
 		toast.classList.toggle("hidden")
-	}, 1500)
+	}, delay)
 }
