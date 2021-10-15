@@ -4,7 +4,7 @@ import {
 	combineCanvases,
 	switchButtons,
 	storeImage
-} from "/utilities.js"
+} from "./utilities.js"
 
 document.addEventListener("change", storeImage)
 
