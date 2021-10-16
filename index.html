@@ -11,9 +11,17 @@
   <body>
     <div class="container" id="container">
       <div class="title-container">
-        <h1 class="title">Pick an image to gridify</h1>
+        <h1 class="title">Gridder</h1>
+        <p class="grid-calc">
+          Current grid size: 20w x 20h <br />
+          (400 blocks)
+        </p>
       </div>
-
+      <div class="output-container">
+        <div class="container-grid"></div>
+        <div class="output-image"></div>
+        <canvas class="output-canvas hidden"></canvas>
+      </div>
       <div class="grid-inputs-container">
         <form action="" class="grid-inputs-form">
           <div class="input-container">
@@ -24,19 +32,23 @@
               max="40"
               class="xvalues"
               name="columns"
+              value="20"
             />
           </div>
           <div class="input-container">
             <label for="rows">Rows</label>
-            <input type="range" min="1" max="40" class="yvalues" name="rows" />
+            <input
+              type="range"
+              min="1"
+              max="40"
+              class="yvalues"
+              name="rows"
+              value="20"
+            />
           </div>
         </form>
       </div>
-      <div class="output-container">
-        <div class="container-grid"></div>
-        <div class="preview-image"></div>
-        <canvas class="output-canvas hidden"></canvas>
-      </div>
+
       <!-- Input and submission -->
       <div class="buttons">
         <div class="input-styler">

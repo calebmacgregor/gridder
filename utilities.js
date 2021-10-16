@@ -127,8 +127,8 @@ export function combineCanvases(image, x, y) {
   }
   const dataURL = outputCanvas.toDataURL()
 
-  const previewImage = document.querySelector(".preview-image")
-  previewImage.innerHTML = `<img src=${dataURL} alt="" class="output-image" />`
+  const outputImage = document.querySelector(".output-image")
+  outputImage.innerHTML = `<img src=${dataURL} alt="" class="output-image" />`
 
   const containerGrid = document.querySelector(".container-grid")
   containerGrid.style.display = "none"
