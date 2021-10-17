@@ -6,8 +6,7 @@ export function getAverageColour(coloursObject) {
   return `rgb(${Math.floor(red)}, ${Math.floor(green)}, ${Math.floor(blue)})`
 }
 
-export function createGrid(x, y, imageWidth, imageHeight) {
-  deleteGrid()
+export function createGrid(x, y, imageWidth, imageHeight, image) {
   //Remove one block worth of content from the right
   //This stops a dark bar from being shown on the right
   //of the image at higher resolutions
@@ -15,37 +14,42 @@ export function createGrid(x, y, imageWidth, imageHeight) {
   const width = Math.floor(imageWidth / x)
   const height = Math.floor(imageHeight / y)
 
-  const containerGrid = container.querySelector(".container-grid")
-  containerGrid.style.gridTemplateColumns = `repeat(${x}, ${width}px)`
-  containerGrid.style.gridTemplateRows = `repeat(${y}, ${height}px)`
+  const numberOfRows = x
 
+  const blockStorage = []
   for (let i = 0; i < numberOfBlocks; i++) {
-    const block = document.createElement("canvas")
-    block.classList.add("block")
-    block.style.width = `${width}px`
-    block.style.height = `${height}px`
-    block.id = i
-    containerGrid.appendChild(block)
+    //Find the current row and column
+    const currentRow = Math.floor(i / numberOfRows)
+    const currentColumn = i % numberOfRows
+
+    const block = {}
+    block.height = height
+    block.width = width
+    block.yPosition = currentRow * height
+    block.xPosition = currentColumn * width
+    blockStorage.push(block)
   }
-  return [numberOfBlocks, x, y]
-}
 
-export function renderCanvases(image, numberOfBlocks, width, height) {
-  //Loop through each canvas and draw the image
-  for (let i = 0; i < numberOfBlocks; i++) {
-    const percentage = Math.floor((i / numberOfBlocks) * 100)
-    const canvas = document.getElementById(i)
+  const simulatedGrid = blockStorage.map((block) => {
+    //Create a temporary canvas
+    const canvas = document.createElement("canvas")
+
+    //Set the width and height to match the block
+    canvas.width = block.width
+    canvas.height = block.height
+
+    //Grab the context
     const ctx = canvas.getContext("2d")
     ctx.drawImage(
       image,
-      canvas.offsetLeft,
-      canvas.offsetTop,
-      width,
-      height,
+      block.xPosition,
+      block.yPosition,
+      block.width,
+      block.height,
       0,
       0,
-      300,
-      150
+      block.width,
+      block.height
     )
 
     //Grab the pixel values from the canvas context
@@ -76,13 +80,14 @@ export function renderCanvases(image, numberOfBlocks, width, height) {
     //Paint the canvas with the average colour
     ctx.fillStyle = rgba
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-  }
+
+    return canvas
+  })
+
+  return [numberOfBlocks, x, y, simulatedGrid]
 }
 
-export function combineCanvases(image, x, y) {
-  //Create an array of all canvases
-  const canvases = Array.from(document.querySelectorAll(".block"))
-
+export function combineCanvases(image, x, y, grid) {
   //Select the original image and its dimensions
   const outputWidth = image.naturalWidth
   const outputHeight = image.naturalHeight
@@ -93,13 +98,13 @@ export function combineCanvases(image, x, y) {
   outputCanvas.height = outputHeight
 
   //Loop through every canvas
-  for (let i = 0; i < canvases.length; i++) {
+  for (let i = 0; i < grid.length; i++) {
     //Grab the block for the current loop
-    const referenceCanvas = canvases[i]
+    const block = grid[i]
 
     //Grab the width and height of the current block
-    const blockWidth = parseFloat(referenceCanvas.style.width)
-    const blockHeight = parseFloat(referenceCanvas.style.height)
+    const blockWidth = parseFloat(block.width)
+    const blockHeight = parseFloat(block.height)
 
     //Get the total number of rows
     const rows = x
@@ -117,23 +122,12 @@ export function combineCanvases(image, x, y) {
     const destinationY = currentRow * blockHeight
 
     //Paint the canvas
-    ctx.drawImage(
-      referenceCanvas,
-      destinationX,
-      destinationY,
-      blockWidth,
-      blockHeight
-    )
+    ctx.drawImage(block, destinationX, destinationY, blockWidth, blockHeight)
   }
   const dataURL = outputCanvas.toDataURL()
 
   const outputImage = document.querySelector(".output-image")
   outputImage.innerHTML = `<img src=${dataURL} alt="" class="output-image" />`
-
-  const containerGrid = document.querySelector(".container-grid")
-  containerGrid.style.display = "none"
-
-  deleteGrid()
 }
 
 export function gridImage(e) {
@@ -189,32 +183,22 @@ export function gridImage(e) {
       const rowsValue = document.querySelector(".yvalues").value
 
       //Create the grid
-      const [numberOfBlocks, x, y] = createGrid(
+      const [numberOfBlocks, x, y, grid] = createGrid(
         columnsValue,
         rowsValue,
         imageWidth,
-        imageHeight
+        imageHeight,
+        image
       )
 
-      //Draw the image on the grid of canvases
-      renderCanvases(image, numberOfBlocks, x, y)
-      combineCanvases(image, x, y)
+      //Draw the image
+      combineCanvases(image, x, y, grid)
 
       //Set the button back to the default text
       inputStyler.classList.remove("loading")
       inputStylerText.innerText = "Choose an image"
     })
   })
-}
-
-export function deleteGrid() {
-  const canvasArray = Array.from(document.querySelectorAll(".block"))
-  canvasArray.forEach((canvas) => {
-    canvas.remove()
-  })
-
-  const mainGrid = document.querySelector(".container-grid")
-  mainGrid.style = ""
 }
 
 export function showToast(message, delay, colour = "#64ffda") {

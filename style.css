@@ -21,7 +21,7 @@ body {
   display: flex;
   height: auto;
   width: 100vw;
-  max-width: 768px;
+  max-width: 1768px;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
@@ -88,13 +88,6 @@ input[type="range"] {
 .output-container {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-}
-
-.container-grid {
-  width: auto;
-  display: grid;
-  grid-template-columns: repeat(4, 50px);
-  position: relative;
 }
 
 .output-image {
